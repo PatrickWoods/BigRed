@@ -77,11 +77,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="application.cpp" />
-    <ClCompile Include="application.h" />
+    <ClInclude Include="application.h" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="winmain.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BigRed.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\pakkun.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

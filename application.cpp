@@ -1,6 +1,10 @@
 // application.cpp
 
 #include "application.h"
+#include "resource.h"
+#include <ctime>
+#include <sstream>
+#include <iomanip>
 
 namespace bigred
 {
@@ -50,6 +54,8 @@ namespace bigred
     window_width = 1280;
     window_height = 900;
 
+    icon_handle = nullptr;
+
     // timing services
     QueryPerformanceFrequency(&time_frequency);
     ZeroMemory(&time_last_frame, sizeof(LARGE_INTEGER));
@@ -75,17 +81,36 @@ namespace bigred
     instance_handle = instance;
 
     // create the window class
-    const wchar_t* window_class_name = L"big_red_class";
+    WNDCLASSEX window_class;
+    ZeroMemory(&window_class, sizeof(WNDCLASSEX));
+    const wchar_t* DEFAULT_WNDCLASSEX_NAME = L"big_red_class";
 
-    WNDCLASS window_class;
-    ZeroMemory(&window_class, sizeof(WNDCLASS));
+    // populate the window class
     window_class.style = CS_VREDRAW | CS_HREDRAW;
+    window_class.cbSize = sizeof(WNDCLASSEX);
+    window_class.cbClsExtra = 0;
+    window_class.cbWndExtra = 0;
     window_class.lpfnWndProc = WndProc;
     window_class.hInstance = instance_handle;
-    window_class.lpszClassName = window_class_name;
+    window_class.lpszClassName = DEFAULT_WNDCLASSEX_NAME;
+    window_class.lpszMenuName = nullptr;
+    // load custom icon or, failing that, the default icon
+    icon_handle = LoadIcon(instance_handle, MAKEINTRESOURCE(IDI_MAIN_ICON));
+    if (icon_handle != nullptr)
+    {
+      window_class.hIcon = icon_handle;
+      window_class.hIconSm = icon_handle;
+    }
+    else
+    {
+      window_class.hIcon = LoadIcon(0, IDI_APPLICATION);
+      window_class.hIconSm = LoadIcon(0, IDI_APPLICATION);
+    }
+    window_class.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
+    window_class.hCursor = LoadCursor(0, IDC_ARROW);
 
     // guard against failure to create the window class
-    if (!RegisterClass(&window_class))
+    if (!RegisterClassEx(&window_class))
     {
 #ifdef _DEBUG
       OutputDebugString(L"Failed to register window class!!!\n");
@@ -107,10 +132,10 @@ namespace bigred
     // get a window handle
     window_handle = CreateWindowEx(
       0,
-      window_class_name,
+      DEFAULT_WNDCLASSEX_NAME,
       window_title.c_str(),
       window_style,
-      0, // may be an error -- doesn't seem to spawn at 0 exactly
+      0,
       0,
       window_rect.right - window_rect.left,
       window_rect.bottom - window_rect.top,
@@ -119,29 +144,33 @@ namespace bigred
       instance_handle,
       0);
 
+    // guard against a failure to create the window
     if (window_handle == NULL)
     {
-      // oh no!!!
+      // oh no!!! failure!
 #ifdef _DEBUG
       OutputDebugString(L"Failed to create window handle!!!\n");
 #endif
       is_running = false;
       return;
     }
-    else
+    else // success!
     {
 #ifdef _DEBUG
       OutputDebugString(L"Application initialized successfully.\n");
 #endif
       is_running = true;
+      ShowWindow(window_handle, SW_SHOW);
     }
+
+    //std::wstring output_string = L"Window Creation [" + get_date() + L" " + get_time() + L"]\n";
+    //OutputDebugString(output_string.c_str());
 
     // process commnand line arguments
 
     // initialize the renderer
 
     // start the main loop
-
     MSG message;
 
     while (is_running)
@@ -168,8 +197,56 @@ namespace bigred
 
   void Application::update(float delta_time)
   {
-    // process user input
+
+   // process user input
 
    // render the screen
+  }
+
+  //--------------------------------------------------- Application::get_time()
+
+  std::wstring Application::get_time(bool is_decorated)
+  {
+    time_t now = time(0);
+    tm ltm;
+    localtime_s(&ltm, &now);
+    std::wstringstream wss;
+    wss << std::put_time(&ltm, L"%T");
+
+    std::wstring time_string = wss.str();
+
+    if (!is_decorated)
+    {
+      std::wstring remove_char = L":";
+      for (wchar_t c : remove_char)
+      {
+        time_string.erase(std::remove(time_string.begin(), time_string.end(), c), time_string.end());
+      }
+    }
+
+    return time_string;
+  }
+
+  //--------------------------------------------------- Application::get_date()
+
+  std::wstring Application::get_date(bool is_decorated)
+  {
+    time_t now = time(0);
+    tm ltm;
+    localtime_s(&ltm, &now);
+    std::wstringstream wss;
+    wss << std::put_time(&ltm, L"%d/%m/%y");
+    std::wstring time_string = wss.str();
+
+    if (!is_decorated)
+    {
+      std::wstring remove_char = L"/";
+      for (wchar_t c : remove_char)
+      {
+        time_string.erase(std::remove(time_string.begin(), time_string.end(), c), time_string.end());
+      }
+    }
+
+    return time_string;
   }
 } 

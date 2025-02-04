@@ -6,14 +6,13 @@
 *     patrick woods
 *     patrick.woods@rogers.com
 *
-*     last revision: 1 feb 2025
-*
 *     - defines a class that creates a window and handles all the Win32 duties
 *
 ******************************************************************************/
 
-#include <windows.h>
+#include <Windows.h>
 #include <string>
+#include <ctime>
 
 namespace bigred
 {
@@ -21,6 +20,11 @@ namespace bigred
   * 
   *     - this is a singleton class that handles all the Win32 duties on
   *     creation
+  *     - all functions will have to be accessed throught the GetInstance()
+  *     function, which returns a reference to the singleton instance
+  * 
+  *     - Run() is a public function which is only a wrapper for the private
+  *     start() function
   * 
   ---------------------------------------------------------------------------*/
 
@@ -42,13 +46,39 @@ namespace bigred
 
   private:
 
+    //--------------------------------------------------------- con/destructors
+
     Application();
     ~Application() {}
     Application(const Application&) = delete;
     Application& operator=(const Application&) = delete;
 
+    //------------------------------------------------------ critical functions
+
+    /*
+    *     - start() is called once to initiate the applciation; thereafter the
+    *     class handles all other functions; it is wrapped publically by Run()
+    */
     void start(HINSTANCE instance);
+
+    /*
+    *     - update() is called once every game cycle inside the windows message
+    *     loop
+    * 
+    *     - delta_time is the numebr of frames (taken fromt he hi-res counter)
+    *     since the last call to update()
+    */
     void update(float delta_time);
+
+    //------------------------------------------------------- utility functions
+
+    // decorated = 00:00:00; not decorated = 000000
+    std::wstring get_time(bool is_decorated = true);
+
+    // decorated = 00/00/00; not decorated = 000000
+    std::wstring get_date(bool is_decorated = true);
+
+    //-------------------------------------------------------- member variables
 
     HINSTANCE       instance_handle;
     HWND            window_handle;
@@ -59,6 +89,8 @@ namespace bigred
     std::wstring    window_title;
     int             window_width;
     int             window_height;
+
+    HICON           icon_handle;
 
     LARGE_INTEGER   time_frequency;
     LARGE_INTEGER   time_last_frame;
