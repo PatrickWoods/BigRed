@@ -35,16 +35,19 @@ namespace bigred
     HexMap();
     ~HexMap() {}
 
-    inline bool IsInitialized() { return is_initialized; }
+    inline bool IsInitialized() { return m_is_initialized; }
 
     bool Initialize(int width, int height);
 
   protected:
 
-    int map_width;
-    int map_height;
+    int m_map_width;
+    int m_map_height;
 
-    bool is_initialized;
+    int m_rows;
+    int m_columns;
+
+    bool m_is_initialized;
 
   private:
   };
