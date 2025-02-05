@@ -1,6 +1,8 @@
 // main.cpp
 
-#include "winmain.h"
+#include "pch.h"
+#include "application.h"
+#include "resource.h"
 
 //------------------------------------------------------------------- WinMain()
 

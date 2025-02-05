@@ -10,9 +10,7 @@
 *
 ******************************************************************************/
 
-#include <Windows.h>
-#include <string>
-#include <ctime>
+#include "pch.h"
 
 namespace bigred
 {
@@ -28,6 +26,12 @@ namespace bigred
   * 
   ---------------------------------------------------------------------------*/
 
+  //----------------------------------------------------------------- constants
+
+  constexpr unsigned int APP_FLAG_DEFAULT = 0;
+  constexpr unsigned int APP_FLAG_NO_LOGG = 1;
+  constexpr unsigned int APP_FLAG_NO_LOG = 1;
+
   class Application
   {
     friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
@@ -38,9 +42,10 @@ namespace bigred
 
     inline static void Run(HINSTANCE instance) { GetInstance().start(instance); }
 
-    inline static bool IsRunning() { return GetInstance().is_running; }
-    inline static bool IsMinimized() { return GetInstance().is_minimized; }
-    inline static bool IsPaused() { return GetInstance().is_paused; }
+    inline static bool IsRunning() { return GetInstance().m_is_running; }
+    inline static bool IsMinimized() { return GetInstance().m_is_minimized; }
+    inline static bool IsPaused() { return GetInstance().m_is_paused; }
+    inline static unsigned int GetApplicationFlags() { return GetInstance().m_application_flags; }
 
   protected:
 
@@ -65,7 +70,7 @@ namespace bigred
     *     - update() is called once every game cycle inside the windows message
     *     loop
     * 
-    *     - delta_time is the numebr of frames (taken fromt he hi-res counter)
+    *     - delta_time is the number of frames (taken from the hi-res counter)
     *     since the last call to update()
     */
     void update(float delta_time);
@@ -78,23 +83,28 @@ namespace bigred
     // decorated = 00/00/00; not decorated = 000000
     std::wstring get_date(bool is_decorated = true);
 
+    void process_command_line();
+
     //-------------------------------------------------------- member variables
 
-    HINSTANCE       instance_handle;
-    HWND            window_handle;
-    bool            is_running;
-    bool            is_minimized;
-    bool            is_paused;
+    HINSTANCE       m_instance_handle;
+    HWND            m_window_handle;
+    bool            m_is_running;
+    bool            m_is_minimized;
+    bool            m_is_paused;
 
-    std::wstring    window_title;
-    int             window_width;
-    int             window_height;
+    std::wstring    m_window_title;
+    int             m_window_width;
+    int             m_window_height;
 
-    HICON           icon_handle;
+    HICON           m_icon_handle;
 
-    LARGE_INTEGER   time_frequency;
-    LARGE_INTEGER   time_last_frame;
-    LARGE_INTEGER   time_this_frame;
-    float           time_delta;
+    unsigned int    m_application_flags;
+
+    LARGE_INTEGER   m_time_frequency;
+    LARGE_INTEGER   m_time_last_frame;
+    LARGE_INTEGER   m_time_this_frame;
+    float           m_time_delta;
+
   };
 }

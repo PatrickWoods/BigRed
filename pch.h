@@ -1,15 +1,19 @@
 #pragma once
 /******************************************************************************
-* 
-*     winmain.h
-* 
+*
+*     pch.h
+*
 *     patrick woods
 *     patrick.woods@rogers.com
-* 
+*
 ******************************************************************************/
 
-#include <windows.h>
+#include <Windows.h>
 #include <string>
-
-#include "application.h"
-#include "resource.h"
+#include <ctime>
+#include <sstream>
+#include <iomanip>
+#include <ShlObj.h>
+#include <fstream>
+#include <shellapi.h>
+#include <algorithm>
