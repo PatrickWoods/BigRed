@@ -11,6 +11,7 @@
 ******************************************************************************/
 
 #include "pch.h"
+#include "logger.h"
 
 namespace bigred
 {
@@ -108,6 +109,8 @@ namespace bigred
     LARGE_INTEGER   m_time_last_frame;
     LARGE_INTEGER   m_time_this_frame;
     float           m_time_delta;
+
+    Logger          log_system;
 
   };
 }

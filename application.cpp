@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "application.h"
 #include "resource.h"
+#include "logger.h"
 
 namespace bigred
 {
@@ -62,12 +63,19 @@ namespace bigred
     ZeroMemory(&m_time_last_frame, sizeof(LARGE_INTEGER));
     ZeroMemory(&m_time_this_frame, sizeof(LARGE_INTEGER));
     m_time_delta = 0.0f;
+
+    // log the startup
+    log_system.Post(L"Application startup");
   }
 
   //------------------------------------------------------ Application::start()
 
   void Application::start(HINSTANCE instance)
   {
+#ifdef _DEBUG
+    log_system.Post(L"Application::start() called.");
+#endif
+
     // guard against bad instance handle
     if (instance == nullptr)
     {

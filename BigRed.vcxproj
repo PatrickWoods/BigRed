@@ -80,10 +80,14 @@
   <ItemGroup>
     <ClCompile Include="application.cpp" />
     <ClInclude Include="application.h" />
+    <ClCompile Include="logger.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="datetime.cpp" />
     <ClCompile Include="winmain.cpp" />
+    <ClInclude Include="datetime.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="logger.h" />
     <ClInclude Include="memory.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
