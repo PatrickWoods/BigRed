@@ -47,6 +47,9 @@ namespace bigred
     inline static bool IsPaused() { return GetInstance().m_is_paused; }
     inline static unsigned int GetApplicationFlags() { return GetInstance().m_application_flags; }
 
+    inline static int GetWindowWidth() { return GetInstance().m_window_width; }
+    inline static int GetWindowHeight() { return GetInstance().m_window_height; }
+
   protected:
 
   private:
