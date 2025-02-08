@@ -11,6 +11,8 @@
 ******************************************************************************/
 
 #include "pch.h"
+#include "logger.h"
+#include "renderer.h"
 
 namespace bigred
 {
@@ -35,6 +37,7 @@ namespace bigred
   class Application
   {
     friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
+    friend class Renderer;
 
   public:
 
@@ -50,6 +53,8 @@ namespace bigred
     inline static int GetWindowWidth() { return GetInstance().m_window_width; }
     inline static int GetWindowHeight() { return GetInstance().m_window_height; }
 
+    inline static void PostToLog(const wchar_t* p_log_string) { GetInstance().log_system.Post(p_log_string); }
+
   protected:
 
   private:
@@ -57,7 +62,7 @@ namespace bigred
     //--------------------------------------------------------- con/destructors
 
     Application();
-    ~Application() {}
+    ~Application();
     Application(const Application&) = delete;
     Application& operator=(const Application&) = delete;
 
@@ -108,6 +113,8 @@ namespace bigred
     LARGE_INTEGER   m_time_last_frame;
     LARGE_INTEGER   m_time_this_frame;
     float           m_time_delta;
+
+    Logger          log_system;
 
   };
 }

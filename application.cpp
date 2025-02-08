@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "application.h"
 #include "resource.h"
+#include "logger.h"
+#include "renderer.h"
 
 namespace bigred
 {
@@ -24,6 +26,15 @@ namespace bigred
     {
       Application::GetInstance().m_is_running = false;
       PostQuitMessage(0);
+    } break;
+
+    case WM_PAINT:
+    {
+      // TODO: remove this test code
+      Renderer::BeginDraw();
+      Renderer::ClearScreen(0.25f, 0.1f, 0.8f);
+      Renderer::EndDraw();
+      // end TODO
     } break;
 
     default:
@@ -62,17 +73,29 @@ namespace bigred
     ZeroMemory(&m_time_last_frame, sizeof(LARGE_INTEGER));
     ZeroMemory(&m_time_this_frame, sizeof(LARGE_INTEGER));
     m_time_delta = 0.0f;
+
+    // log the startup
+    log_system.Post(L"Application startup.");
+  }
+
+  Application::~Application()
+  {
+    log_system.Post(L"Exiting application.");
   }
 
   //------------------------------------------------------ Application::start()
 
   void Application::start(HINSTANCE instance)
   {
+#ifdef _DEBUG
+    log_system.Post(L"Application::start() called.");
+#endif
+
     // guard against bad instance handle
     if (instance == nullptr)
     {
 #ifdef _DEBUG
-      OutputDebugString(L"Bad instance handle.\n");
+      log_system.Post(L"Bad instance handle.");
 #endif
       m_is_running = false;
       return;
@@ -114,7 +137,7 @@ namespace bigred
     if (!RegisterClassEx(&window_class))
     {
 #ifdef _DEBUG
-      OutputDebugString(L"Failed to register window class!!!\n");
+      log_system.Post(L"Failed to register window class!!!");
 #endif
       m_is_running = false;
       return;
@@ -150,7 +173,7 @@ namespace bigred
     {
       // oh no!!! failure!
 #ifdef _DEBUG
-      OutputDebugString(L"Failed to create window handle!!!\n");
+      log_system.Post(L"Failed to create window handle!!!");
 #endif
       m_is_running = false;
       return;
@@ -158,18 +181,16 @@ namespace bigred
     else // success!
     {
 #ifdef _DEBUG
-      OutputDebugString(L"Application initialized successfully.\n");
+      log_system.Post(L"Application initialized successfully.");
 #endif
       m_is_running = true;
       ShowWindow(m_window_handle, SW_SHOW);
     }
 
-    //std::wstring output_string = L"Window Creation [" + get_date() + L" " + get_time() + L"]\n";
-    //OutputDebugString(output_string.c_str());
-
     // process commnand line arguments
 
     // initialize the renderer
+    Renderer::GetInstance().Initialize(m_window_handle);
 
     // start the main loop
     MSG message;
@@ -189,7 +210,6 @@ namespace bigred
 
         // update and render
         update(m_time_delta);
-
       }
     }
   }
