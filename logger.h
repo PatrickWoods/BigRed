@@ -24,6 +24,9 @@ namespace bigred
 
     std::wstring GetLogDirectory();
     std::wstring GetLogFilename();
+
+    bool Activate();
+    bool Deactivate();
     
   protected:
   private:
@@ -31,5 +34,6 @@ namespace bigred
     std::wstring        m_log_directory;
     std::wstring        m_log_filename;
 
+    bool                m_is_active;
   };
 }
