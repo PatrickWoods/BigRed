@@ -24,23 +24,12 @@ namespace bigred
 
     std::wstring GetLogDirectory();
     std::wstring GetLogFilename();
-
-    inline bool IsActive() { return m_is_active; }
-
-    /*  - these functions allow the logger to be turned on and off
-    *   - they return true when the state changes e.g. calling Activate() when
-    *   m_is_active == false; they return false otherwise 
-    */
-    bool Activate();
-    bool Deactivate();
     
   protected:
   private:
 
     std::wstring        m_log_directory;
     std::wstring        m_log_filename;
-
-    bool                m_is_active;
 
   };
 }

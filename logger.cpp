@@ -4,14 +4,13 @@
 #include "logger.h"
 #include "datetime.h"
 
+
 namespace bigred
 {
   Logger::Logger()
   {
     m_log_directory = GetLogDirectory();
     m_log_filename = GetLogFilename();
-
-    m_is_active = true;
 
     std::wfstream out_file;
 
