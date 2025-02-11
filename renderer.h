@@ -40,8 +40,12 @@ namespace bigred
 
     HWND                              m_window_handle;
 
+    // Direct2d Elements
     ID2D1Factory*                     m_p_factory;
     ID2D1HwndRenderTarget*            m_p_render_target;
+
+
+
 
 
   };

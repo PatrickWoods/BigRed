@@ -28,21 +28,9 @@ namespace bigred
       PostQuitMessage(0);
     } break;
 
-    case WM_PAINT:
-    {
-      // TODO: remove this test code
-      Renderer::BeginDraw();
-      Renderer::ClearScreen(0.25f, 0.1f, 0.8f);
-      Renderer::EndDraw();
-      // end TODO
-    } break;
-
     default:
-    {
       return DefWindowProc(hwnd, message, wparam, lparam);
-    } break;
     }
-
     return result;
   }
 
@@ -73,9 +61,10 @@ namespace bigred
     ZeroMemory(&m_time_last_frame, sizeof(LARGE_INTEGER));
     ZeroMemory(&m_time_this_frame, sizeof(LARGE_INTEGER));
     m_time_delta = 0.0f;
-
+    
     // log the startup
     log_system.Post(L"Application startup.");
+
   }
 
   Application::~Application()
@@ -197,7 +186,7 @@ namespace bigred
 
     while (m_is_running)
     {
-      if (PeekMessage(&message, m_window_handle, 0, 0, PM_REMOVE))
+      if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
       {
         TranslateMessage(&message);
         DispatchMessage(&message);
@@ -210,6 +199,7 @@ namespace bigred
 
         // update and render
         update(m_time_delta);
+
       }
     }
   }
@@ -218,10 +208,10 @@ namespace bigred
 
   void Application::update(float delta_time)
   {
-
-   // process user input
-
    // render the screen
+    bigred::Renderer::BeginDraw();
+    bigred::Renderer::ClearScreen(0.25f, 0.1f, 0.8f);
+    bigred::Renderer::EndDraw();
   }
 
   //--------------------------------------------------- Application::get_time()

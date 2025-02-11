@@ -60,5 +60,6 @@ namespace bigred
     m_is_initialized = false;
     m_p_factory = NULL;
     m_p_render_target = NULL;
+    m_window_handle = NULL;
   }
 }
